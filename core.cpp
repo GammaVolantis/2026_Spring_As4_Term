@@ -106,6 +106,16 @@ int main(){
         cout << "ERROR: Cannot create pipe (toC)" << endl;
         exit(1);
     }
+    toP2[2];
+    toC2[2];
+    if(pipe(toP2) < 0){
+        cout << "ERROR: Cannot create pipe (toP)" << endl;
+        exit(1);
+    }
+    if(pipe(toC2) < 0){
+        cout << "ERROR: Cannot create pipe (toC)" << endl;
+        exit(1);
+    }
 
     //Store og STD's
     int ogIN = dup(0);
