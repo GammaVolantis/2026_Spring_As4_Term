@@ -106,16 +106,6 @@ int main(){
         cout << "ERROR: Cannot create pipe (toC)" << endl;
         exit(1);
     }
-    toP2[2];
-    toC2[2];
-    if(pipe(toP2) < 0){
-        cout << "ERROR: Cannot create pipe (toP)" << endl;
-        exit(1);
-    }
-    if(pipe(toC2) < 0){
-        cout << "ERROR: Cannot create pipe (toC)" << endl;
-        exit(1);
-    }
 
     //Store og STD's
     int ogIN = dup(0);
@@ -124,6 +114,7 @@ int main(){
 
 	//start up the "terminal"
     while(!ender){
+        char* cmdLine;
         cout << directory << "~$";
         getline(in, line);
         addToHistory(line);
@@ -144,9 +135,15 @@ int main(){
             //make sure to close file
             file.close();
         }
-        else if(stdOutRead(line)>-1){
+        vector<string> command = tokenize(line);
+        else if(stdOutRead(command)>-1){
             //command -> child -> execvp
             //handle reading to
+            int orgOut = dup(1);
+            cmdLine = new char[stdOutRead(command)];
+            for (int i = 0; i < stdOutRead(command); ++i) {
+                cmdLine[i] = (char*)commands[i].c_str();
+            }
             pid_t = pid;
             pid = fork();
             if(pid < 0){ //failed
@@ -165,7 +162,7 @@ int main(){
                 //write it to the file
             }
         }
-        else if(stdInRead(line)>-1){
+        else if(stdInRead(command)>-1){
             //command -> child -> execvp
             //handle reading from
             pid_t = pid;
@@ -189,7 +186,7 @@ int main(){
             }
 
         }
-        else if(stdHasPipe(line)>-1){
+        else if(stdHasPipe(command)>-1){
             //command -> child -> execvp
             //handle pipe
             pid_t = pid;
