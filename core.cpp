@@ -265,7 +265,7 @@ int main(){
         else{
             //child -> execvp()
             //handle single argument
-            pid_t = pid;
+            pid_t pid;
             pid = fork();
             if(pid < 0){ //failed
                 cout << "ERROR: Cannot create a secondary process" << endl;
