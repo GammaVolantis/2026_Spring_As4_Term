@@ -144,7 +144,7 @@ int main(){
             for (int i = 0; i < stdOutRead(command); ++i) {
                 cmdLine[i] = (char*)commands[i].c_str();
             }
-            pid_t = pid;
+            pid_t pid;
             pid = fork();
             if(pid < 0){ //failed
                 cout << "ERROR: Cannot create a secondary process" << endl;
@@ -165,7 +165,7 @@ int main(){
         else if(stdInRead(command)>-1){
             //command -> child -> execvp
             //handle reading from
-            pid_t = pid;
+            pid_t pid;
             pid = fork();
             if(pid < 0){ //failed
                 cout << "ERROR: Cannot create a secondary process" << endl;
@@ -190,12 +190,15 @@ int main(){
             int pipeLoc = stdHasPipe(command);
             vector<string> firstCommand;
             vector<string> secondCommand;
-            for(string c : command){
-                
+            for(int i = 0; i<pipeLoc; i++){
+                firstCommand.push_back(command[i]);
+            }
+            for(int i = pipeLoc+1; i < command.size(); i++){
+                secondCommand.push_back(command[i]);
             }
             //command -> child -> execvp
             //handle pipe
-            pid_t = pid;
+            pid_t pid;
             pid = fork();
             if(pid < 0){ //failed
                 cout << "ERROR: Cannot create a secondary process" << endl;
@@ -207,7 +210,7 @@ int main(){
                 close(toP[1]);
                 close(toP[0]);
                 //execute the command
-                if (execvp(command[0]) < 0){
+                if (execvp(fisrtCommand[0], firstCommand) < 0){
                     cout << "Error: Cannot chnage the process exe image a process" << endl;
                     exit(3);
                 }
@@ -230,7 +233,14 @@ int main(){
                     dup2(toP[0], 0);
                     close(toP[0]);
                     close(toP[1]);
-
+                    //get the information from the pipe
+                    string childData;
+                    cin >>  childData;
+                    secondCommand.push_back(childData);
+                if (execvp(secondCommand[0], secondCommand) < 0){
+                    cout << "Error: Cannot chnage the process exe image a process" << endl;
+                    exit(3);
+                }
 
                 }
                 else{ //parent
