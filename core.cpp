@@ -190,12 +190,24 @@ int main(){
             int pipeLoc = stdHasPipe(command);
             vector<string> firstCommand;
             vector<string> secondCommand;
+            
             for(int i = 0; i<pipeLoc; i++){
                 firstCommand.push_back(command[i]);
             }
+            char* firstComPrepped[firstCommand.size+1];
+            for(int i = 0; i<firstCommand.size(); i++){
+                firstComPrepped[i] = firstCommand[i];
+            }
+            firstComPrepped[firstCommand.size()] = NULL;
+
             for(int i = pipeLoc+1; i < command.size(); i++){
                 secondCommand.push_back(command[i]);
             }
+            char* secondComPrepped[secondCommand.size+2];
+            for(int i = 0; i<secondCommand.size(); i++){
+                secondComPrepped[i] = secondCommand[i];
+            }
+            secondComPrepped[secondCommand.size()+1] = NULL;
             //command -> child -> execvp
             //handle pipe
             pid_t pid;
@@ -210,7 +222,7 @@ int main(){
                 close(toP[1]);
                 close(toP[0]);
                 //execute the command
-                if (execvp(fisrtCommand[0], firstCommand) < 0){
+                if (execvp(fisrtComPrepped[0], firstComPrepped) < 0){
                     cout << "Error: Cannot chnage the process exe image a process" << endl;
                     exit(3);
                 }
@@ -236,8 +248,8 @@ int main(){
                     //get the information from the pipe
                     string childData;
                     cin >>  childData;
-                    secondCommand.push_back(childData);
-                if (execvp(secondCommand[0], secondCommand) < 0){
+                    secondComPrepped[secondCommand.size()] = childData;
+                if (execvp(secondComPrepped[0], secondComPrepped) < 0){
                     cout << "Error: Cannot chnage the process exe image a process" << endl;
                     exit(3);
                 }
