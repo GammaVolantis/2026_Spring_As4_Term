@@ -16,12 +16,27 @@ Needs to be able to store commands into a file(history).
 #include <cstdlib>
 #include<unistd.h>
 #include<sstream>
+#include <stdio.h>
+#include <stdlib.h>
+#include <sys/wait.h>
+#include <fcntl.h>
 
 using namespace std;
 
 
 //Need the code from As3 for vector parsing
 
+vector<string> tokenize(string str) {
+
+    stringstream token(str);
+    string word;
+    vector<string> tokens;
+    while (token >> word) {
+        tokens.push_back(word);
+    }
+
+    return tokens;
+}
 
 // Adds user input into log
 void addToHistory(string data){
@@ -34,16 +49,37 @@ void addToHistory(string data){
     //end
 }
 
-int stdOutRead(string line){
-
+int stdOutRead(vector<string> line){
+    int index = -1;
+    for (int i = 0; i < line.size(); ++i) {
+        if (line[i] == ">") {
+            index = i;
+            break;
+        }
+    }
+    return index;
 }
 
-int stdInRead(string line){
-
+int stdInRead(vector<string> line){
+    int index = -1;
+    for (int i = 0; i < line.size(); ++i) {
+        if (line[i] == "<") {
+            index = i;
+            break;
+        }
+    }
+    return index;
 }
 
-int hasPipe(string line){
-    
+int hasPipe(vector<string> line){
+    int index = -1;
+    for (int i = 0; i < line.size(); ++i) {
+        if (line[i] == "|") {
+            index = i;
+            break;
+        }
+    }
+    return index;
 }
 
 
