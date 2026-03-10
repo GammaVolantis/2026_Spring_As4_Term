@@ -196,7 +196,7 @@ int main(){
             }
             char* firstComPrepped[firstCommand.size()+1];
             for(int i = 0; i<firstCommand.size(); i++){
-                firstComPrepped[i] = firstCommand[i];
+                firstComPrepped[i] = firstCommand[i].c_str();
             }
             firstComPrepped[firstCommand.size()] = NULL;
 
@@ -205,7 +205,7 @@ int main(){
             }
             char* secondComPrepped[secondCommand.size()+2];
             for(int i = 0; i<secondCommand.size(); i++){
-                secondComPrepped[i] = secondCommand[i];
+                secondComPrepped[i] = secondCommand[i].c_str();
             }
             secondComPrepped[secondCommand.size()+1] = NULL;
             //command -> child -> execvp
