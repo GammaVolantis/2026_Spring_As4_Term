@@ -187,6 +187,12 @@ int main(){
 
         }
         else if(stdHasPipe(command)>-1){
+            int pipeLoc = stdHasPipe(command);
+            vector<string> firstCommand;
+            vector<string> secondCommand;
+            for(string c : command){
+                
+            }
             //command -> child -> execvp
             //handle pipe
             pid_t = pid;
@@ -196,14 +202,42 @@ int main(){
                 exit(2);
             }
             else if(pid == 0){ //child
-                //???????????????
+                //setup the output pipe
+                dup2(toP[1], 1);
+                close(toP[1]);
+                close(toP[0]);
                 //execute the command
-                //???????????????
+                if (execvp(command[0]) < 0){
+                    cout << "Error: Cannot chnage the process exe image a process" << endl;
+                    exit(3);
+                }
             }
             else{ //parent
-                //???????????????
                 //wait
-                //???????????????
+                wait(0);
+                //get the data from the first child
+
+                //pass it to the second child via code inheritance
+                // OR just get it when we need it from the pipe
+                pid_t = pid;
+                pid = fork();
+                if(pid < 0){ //failed
+                    cout << "ERROR: Cannot create a secondary-secondary process" << endl;
+                    exit(2);
+                }
+                else if(pid == 0){ //child
+                    //execute the command
+                    dup2(toP[0], 0);
+                    close(toP[0]);
+                    close(toP[1]);
+
+
+                }
+                else{ //parent
+                    //wait
+
+
+                }
             }
         }
         else{
