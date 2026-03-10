@@ -190,11 +190,11 @@ int main(){
             int pipeLoc = stdHasPipe(command);
             vector<string> firstCommand;
             vector<string> secondCommand;
-            
+
             for(int i = 0; i<pipeLoc; i++){
                 firstCommand.push_back(command[i]);
             }
-            char* firstComPrepped[firstCommand.size+1];
+            char* firstComPrepped[firstCommand.size()+1];
             for(int i = 0; i<firstCommand.size(); i++){
                 firstComPrepped[i] = firstCommand[i];
             }
@@ -203,7 +203,7 @@ int main(){
             for(int i = pipeLoc+1; i < command.size(); i++){
                 secondCommand.push_back(command[i]);
             }
-            char* secondComPrepped[secondCommand.size+2];
+            char* secondComPrepped[secondCommand.size()+2];
             for(int i = 0; i<secondCommand.size(); i++){
                 secondComPrepped[i] = secondCommand[i];
             }
@@ -234,7 +234,7 @@ int main(){
 
                 //pass it to the second child via code inheritance
                 // OR just get it when we need it from the pipe
-                pid_t = pid;
+                pid_t pid;
                 pid = fork();
                 if(pid < 0){ //failed
                     cout << "ERROR: Cannot create a secondary-secondary process" << endl;
