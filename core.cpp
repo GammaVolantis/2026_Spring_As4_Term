@@ -208,7 +208,7 @@ int main(){
             }
             char* firstComPrepped[firstCommand.size() + 1];
             for (int i = 0; i < firstCommand.size(); i++) {
-                firstComPrepped[i] = firstCommand[i].c_str();
+                firstComPrepped[i] = (char*)firstCommand[i].c_str();
             }
             firstComPrepped[firstCommand.size()] = NULL;
 
@@ -217,7 +217,7 @@ int main(){
             }
             char* secondComPrepped[secondCommand.size() + 2];
             for (int i = 0; i < secondCommand.size(); i++) {
-                secondComPrepped[i] = secondCommand[i].c_str();
+                secondComPrepped[i] = (char*)secondCommand[i].c_str();
             }
             secondComPrepped[secondCommand.size() + 1] = NULL;
             //command -> child -> execvp
@@ -260,7 +260,7 @@ int main(){
                     //get the information from the pipe
                     string childData;
                     cin >> childData;
-                    secondComPrepped[secondCommand.size()] = childData;
+                    secondComPrepped[secondCommand.size()] = (char*)childData.c_str();
                     if (execvp(secondComPrepped[0], secondComPrepped) < 0) {
                         cout << "Error: Cannot chnage the process exe image a process" << endl;
                         exit(3);
