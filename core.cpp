@@ -8,7 +8,7 @@ Needs to be able to store commands into a file(history).
 
 /* ------------- IN CLASS CODE NOTES -----------------*/
     //handles a command(exit, history, pwd"print working directory")
-	//handles attaching data and setting files(only needs to be able to handle a single one at a time)
+    //handles attaching data and setting files(only needs to be able to handle a single one at a time)
 
 #include <iostream>
 #include <string>
@@ -40,17 +40,19 @@ vector<string> tokenize(string str) {
 }
 
 // Adds user input into log
-void addToHistory(string data){
+void addToHistory(string data, string filePath) {
     // open or (if not made yet) make the file.
-
-    //send the data to the file
-
+    ofstream file(filePath, ios::app);
+    if (file.is_open()) {
+        //send the data to the file
+        file << data << endl;
+    }
     //close file
-
+    file.close();
     //end
 }
 
-int stdOutRead(vector<string> line){
+int stdOutRead(vector<string> line) {
     int index = -1;
     for (int i = 0; i < line.size(); ++i) {
         if (line[i] == ">") {
@@ -61,7 +63,7 @@ int stdOutRead(vector<string> line){
     return index;
 }
 
-int stdInRead(vector<string> line){
+int stdInRead(vector<string> line) {
     int index = -1;
     for (int i = 0; i < line.size(); ++i) {
         if (line[i] == "<") {
@@ -72,7 +74,7 @@ int stdInRead(vector<string> line){
     return index;
 }
 
-int stdHasPipe(vector<string> line){
+int stdHasPipe(vector<string> line) {
     int index = -1;
     for (int i = 0; i < line.size(); ++i) {
         if (line[i] == "|") {
@@ -85,8 +87,8 @@ int stdHasPipe(vector<string> line){
 
 
 
-int main(){
-	//load any needed data
+int main() {
+    //load any needed data
 
     //storage file
     string historyLog = "hist_log.txt";
@@ -100,11 +102,11 @@ int main(){
     //prep-pipes
     int toP[2];
     int toC[2];
-    if(pipe(toP) < 0){
+    if (pipe(toP) < 0) {
         cout << "ERROR: Cannot create pipe (toP)" << endl;
         exit(1);
     }
-    if(pipe(toC) < 0){
+    if (pipe(toC) < 0) {
         cout << "ERROR: Cannot create pipe (toC)" << endl;
         exit(1);
     }
@@ -114,31 +116,31 @@ int main(){
     int ogOUT = dup(1);
 
 
-	//start up the "terminal"
-    while(!ender){
+    //start up the "terminal"
+    while (!ender) {
         cout << directory << "~$";
         string line;
         getline(cin, line);
-        addToHistory(line);
+        addToHistory(line, historyLog);
         vector<string> command = tokenize(line);
-        if(line == "exit"){
+        if (line == "exit") {
             ender = true;
         }
-        else if(line == "history"){
+        else if (line == "history") {
             //print the history
             ifstream file(historyLog);
-            if(!file.is_open()){
+            if (!file.is_open()) {
                 cout << "ERROR: File not found" << endl;
                 exit(3);
             }
             string data;
-            while(getline(file, data)){
+            while (getline(file, data)) {
                 cout << data << endl;
             }
             //make sure to close file
             file.close();
         }
-        else if(stdOutRead(command)>-1){
+        else if (stdOutRead(command) > -1) {
             //command -> child -> execvp
             //handle reading to
             int orgOut = dup(1);
@@ -151,20 +153,21 @@ int main(){
             int outFd = open(command[outputIndex + 1].c_str(), O_WRONLY | O_CREAT, 0666);
             pid_t pid;
             pid = fork();
-            if(pid < 0){ //failed
+            if (pid < 0) { //failed
                 cout << "ERROR: Cannot create a secondary process" << endl;
                 exit(2);
             }
-            else if(pid == 0){ //child
+            else if (pid == 0) { //child
                 //open a channel to parent
                 dup2(outFd, 1);
                 //execute the command
                 if (execvp(cmdLine[0], cmdLine) < 0) {
-                    cout << "Something went wrong" << endl;
+                    cout << "Error: Cannot chnage the process exe image a process" << endl;
+                    exit(3);
                 }
                 //die
             }
-            else{ //parent
+            else { //parent
                 //get the file reference prepped
                 //wait
                 wait(0);
@@ -174,22 +177,22 @@ int main(){
                 //write it to the file
             }
         }
-        else if(stdInRead(command)>-1){
+        else if (stdInRead(command) > -1) {
             //command -> child -> execvp
             //handle reading from
             pid_t pid;
             pid = fork();
-            if(pid < 0){ //failed
+            if (pid < 0) { //failed
                 cout << "ERROR: Cannot create a secondary process" << endl;
                 exit(2);
             }
-            else if(pid == 0){ //child
+            else if (pid == 0) { //child
                 //set pipe to parent
                 //wait
                 //take data from parent
                 //run command
             }
-            else{ //parent
+            else { //parent
                 //get reference to file
                 //get info
                 // pass to child
@@ -275,24 +278,24 @@ int main(){
                 }
             }
         }
-        else{
+        else {
             //child -> execvp()
             //handle single argument
             pid_t pid;
             pid = fork();
-            if(pid < 0){ //failed
+            if (pid < 0) { //failed
                 cout << "ERROR: Cannot create a secondary process" << endl;
                 exit(2);
             }
-            else if(pid == 0){ //child
+            else if (pid == 0) { //child
                 //execute command
             }
-            else{ //parent
+            else { //parent
                 //wait
             }
         }
 
     }
 
-	return 0;
+    return 0;
 }
