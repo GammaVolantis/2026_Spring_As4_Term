@@ -215,11 +215,12 @@ int main(){
             for (int i = pipeLoc + 1; i < command.size(); i++) {
                 secondCommand.push_back(command[i]);
             }
-            char* secondComPrepped[secondCommand.size() + 2];
+            char* secondComPrepped[secondCommand.size() + 3];
             for (int i = 0; i < secondCommand.size(); i++) {
                 secondComPrepped[i] = (char*)secondCommand[i].c_str();
             }
-            secondComPrepped[secondCommand.size() + 1] = NULL;
+            secondComPrepped[secondCommand.size()] = '<';
+            secondComPrepped[secondCommand.size() + 2] = NULL;
             //command -> child -> execvp
             //handle pipe
             pid_t pid;
@@ -260,7 +261,7 @@ int main(){
                     //get the information from the pipe
                     string childData;
                     cin >> childData;
-                    secondComPrepped[secondCommand.size()] = (char*)childData.c_str();
+                    secondComPrepped[secondCommand.size() + 1] = (char*)childData.c_str();
                     if (execvp(secondComPrepped[0], secondComPrepped) < 0) {
                         cout << "Error: Cannot chnage the process exe image a process" << endl;
                         exit(3);
