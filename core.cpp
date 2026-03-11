@@ -140,10 +140,12 @@ int main() {
             //make sure to close file
             file.close();
         }
+        else if (line == "pwd") {
+            cout << directory << endl;
+        }
         else if (stdOutRead(command) > -1) {
             //command -> child -> execvp
             //handle reading to
-            int orgOut = dup(1);
             int outputIndex = stdOutRead(command);
             char* cmdLine[outputIndex + 1];
             for (int i = 0; i < outputIndex; ++i) {
@@ -172,7 +174,7 @@ int main() {
                 //wait
                 wait(0);
                 fflush(stdout);
-                dup2(orgOut, 1);
+                dup2(ogOUT, 1);
                 //take the data from child
                 //write it to the file
             }
@@ -281,6 +283,11 @@ int main() {
         else {
             //child -> execvp()
             //handle single argument
+            char* cmdLine[command.size() + 1];
+            for (int i = 0; i < command.size(); ++i) {
+                cmdLine[i] = (char*)command[i].c_str();
+            }
+            cmdLine[command.size()] = NULL;
             pid_t pid;
             pid = fork();
             if (pid < 0) { //failed
@@ -289,9 +296,15 @@ int main() {
             }
             else if (pid == 0) { //child
                 //execute command
+                if (execvp(cmdLine[0], cmdLine) < 0) {
+                    cout << "Error: Cannot chnage the process exe image a process" << endl;
+                    exit(3);
+                }
             }
             else { //parent
                 //wait
+                wait(0);
+
             }
         }
 
