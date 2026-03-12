@@ -1,3 +1,13 @@
+Connor Llewellyn, Matthew Brodbeck, Staton Otto
+
+=== Running projects in cpp/As4/2026_Spring_As4_Term ===
+
+========================================
+ Running project: core.cpp
+ Input file: commands.txt
+========================================
+
+===== SOURCE CODE =====
 // Assignment 4
 // Prog: Connor Llewellyn, Matthew Brodbeck, Staton Otto
 /*
@@ -315,3 +325,38 @@ int main() {
 
     return 0;
 }
+===== COMPILING =====
+Compilation successful
+
+===== PROGRAM OUTPUT =====
+/home/gamma/cpp/As4/2026_Spring_As4_Term~$ ./prog1 | ./prog2
+Recieved: Hello Jim!
+/home/gamma/cpp/As4/2026_Spring_As4_Term~$ ./prog1 > input.txt
+/home/gamma/cpp/As4/2026_Spring_As4_Term~$ ./prog2 < input.txt
+Recieved: Hello Jim!
+/home/gamma/cpp/As4/2026_Spring_As4_Term~$ pwd
+/home/gamma/cpp/As4/2026_Spring_As4_Term
+/home/gamma/cpp/As4/2026_Spring_As4_Term~$ ls
+README.md
+commands.txt
+core
+core.cpp
+hist_log.txt
+input.txt
+prog1
+prog1.cpp
+prog2
+prog2.cpp
+stored.txt
+test
+/home/gamma/cpp/As4/2026_Spring_As4_Term~$ history
+./prog1.cpp | prog2.cpp
+./prog1.cpp | ./prog2.cpp
+./prog1 | ./prog2
+ ./prog1 | ./prog2
+ls
+./prog1 < stored.txt
+ ./prog2 > stored.txt
+/home/gamma/cpp/As4/2026_Spring_As4_Term~$ exit
+===== END OF PROJECT =====
+
