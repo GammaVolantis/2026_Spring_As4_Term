@@ -1,5 +1,6 @@
 // Hello project
 
+// Prog: Connor Llewellyn, Matthew Brodbeck, Staton Otto
 
 /*
 Need to make a terminal with the ability to handle commands.
@@ -182,6 +183,14 @@ int main() {
         else if (stdInRead(command) > -1) {
             //command -> child -> execvp
             //handle reading from
+            int orgIn = dup(0);
+            int inputIndex = stdInRead(command);
+            char* cmdLine[inputIndex + 1];
+            for (int i = 0; i < inputIndex; ++i) {
+                cmdLine[i] = (char*)command[i].c_str();
+            }
+            cmdLine[inputIndex] = NULL;
+            int inFd = open(command[inputIndex + 1].c_str(), O_RDONLY);
             pid_t pid;
             pid = fork();
             if (pid < 0) { //failed
@@ -189,17 +198,17 @@ int main() {
                 exit(2);
             }
             else if (pid == 0) { //child
-                //set pipe to parent
-                //wait
-                //take data from parent
-                //run command
+                dup2(inFd, 0);
+
+                if (execvp(cmdLine[0], cmdLine) < 0) {
+                    cout << "Something went wrong." << endl;
+                    exit(3);
+                }
             }
             else { //parent
-                //get reference to file
-                //get info
-                // pass to child
-                //wait
-                //read from child and print to screen?????
+                wait(0);
+                fflush(stdout);
+                dup2(ogIN, 0);
             }
 
         }
